@@ -36,19 +36,23 @@ class EnergyAnalyzer:
     def load_data_from_csv(self, filename, data_type='record'):
         """Loads data from a CSV file into the appropriate list."""
         try:
+            #opens file in read mode
             with open(filename, 'r') as f:
                 reader = csv.DictReader(f)
                 if data_type == 'inflation':
+                    #for each row in the csv file, make inflation data of that year equal to the corresponding inflation rate formatted as a dictionary
                     for row in reader:
                         self.inflation_data[int(row['year'])] = float(row['inflation_rate'])
                 else:
                     for row in reader:
+                        #same thing for record and prices, except its formatted as a list instead of dictionary
                         if data_type == 'record':
                             record = EnergyRecord(row['year'], row['region'], row['sector'], row['consumption'], row['units'])
                             self.records.append(record)
                         elif data_type == 'price':
                             price = EnergyPrice(row['year'], row['sector'], row['fuel_type'], row['price'], row['units'])
                             self.prices.append(price)
+        #exceptions:
         except FileNotFoundError:
             print(f"Error: {filename} not found.")
         except Exception as e:
@@ -60,6 +64,7 @@ class EnergyAnalyzer:
             return 1.0
         
         cpi_factor = 1.0
+        #for each Object year in the class, find the inflation rate in Dollars by dividing its inflation_data by 100
         for y in range(year, self.base_year):
             inflation_rate = self.inflation_data.get(y, 0) / 100
             cpi_factor *= (1 + inflation_rate)
@@ -67,24 +72,26 @@ class EnergyAnalyzer:
 
     def generate_inflation_adjusted_report(self, sector, fuel_type):
         """Generates a report showing nominal vs. inflation-adjusted prices."""
+        #setup
         sector_prices = [p for p in self.prices if p.sector == sector and p.fuel_type == fuel_type]
         if not sector_prices:
             return f"No price data found for {sector} {fuel_type}."
 
         report = f"\nInflation-Adjusted Price Report for {sector} {fuel_type} (Base Year: {self.base_year}):\n"
-        report += "Year | Nominal Price | Adjusted Price (in {self.base_year} USD)\n"
+        report += "Year | Nominal Price | Adjusted Price (per year) in USD)\n"
         report += "---- | ------------- | ----------------------------------\n"
+
 
         for p in sorted(sector_prices, key=lambda x: x.year):
             cpi_factor = self.get_cpi_factor(p.year)
             adjusted_price = p.price * cpi_factor
+            #for each year in the list of sector prices depending on residential or non-residential, add to the report the data of the year, the price of energy, and the adjusted price for inflation.
             report += f"{p.year} | ${p.price:.4f}        | ${adjusted_price:.4f}\n"
         
         return report
 
     def get_consumption_by_sector(self, year):
         """Returns a dictionary mapping sectors to consumption values for a given year."""
-        # ... (rest of the methods are unchanged)
         consumption_by_sector = {}
         for record in self.records:
             if record.year == year:
@@ -95,6 +102,7 @@ class EnergyAnalyzer:
         return consumption_by_sector
 
     def generate_trend_report(self, sector, units_filter=None):
+        #Returns a report that shows the consumption of energy by non res and res sectors in 1990 and 2024 in terms of GWh, and show the difference over the course of so many years.
         sector_records = [r for r in self.records if r.sector == sector]
         if units_filter:
             sector_records = [r for r in sector_records if r.units == units_filter]
@@ -114,6 +122,7 @@ class EnergyAnalyzer:
         return report
 
     def generate_deviation_report(self, sector1, sector2, units_filter):
+        #generates a report that shows the deviation between residential and non-residential sector's energy consumption in terms of GWh by year
         s1_records = {r.year: r.consumption for r in self.records if r.sector == sector1 and r.units == units_filter}
         s2_records = {r.year: r.consumption for r in self.records if r.sector == sector2 and r.units == units_filter}
 
@@ -124,6 +133,7 @@ class EnergyAnalyzer:
         report += "---- | -----------------------------------------\n"
 
         for year in all_years:
+            #for each year in the list, return the difference of nonresidential and residential energy consumption by year
             s1_val = s1_records.get(year, 0)
             s2_val = s2_records.get(year, 0)
             deviation = s2_val - s1_val
@@ -132,5 +142,6 @@ class EnergyAnalyzer:
         return report
 
     def save_analysis_report(self, output_filename, report_content):
+        #write the new analysis into a new text file to save the report by putting the file in write mode (analysis report.txt)
         with open(output_filename, "w") as f:
             f.write(report_content)

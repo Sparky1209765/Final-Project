@@ -43,6 +43,8 @@ def main():
     analyzer.save_analysis_report('analysis_report.txt', report_content)
     print("Analysis complete. Report saved to analysis_report.txt")
     print("\n--- Report Content ---")
+
+    #Prints actual report
     print(report_content)
 
 
