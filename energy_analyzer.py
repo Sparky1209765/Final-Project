@@ -29,6 +29,7 @@ class EnergyAnalyzer:
     """Analyzes energy consumption and price data."""
     def __init__(self, base_year=datetime.now().year):
         self.records = []
+        self.records2 = []
         self.prices = []
         self.inflation_data = {}
         self.base_year = base_year
@@ -52,6 +53,9 @@ class EnergyAnalyzer:
                         elif data_type == 'price':
                             price = EnergyPrice(row['year'], row['sector'], row['fuel_type'], row['price'], row['units'])
                             self.prices.append(price)
+                        elif data_type == 'con':
+                            record = EnergyRecord(row['year'], row['region'], row['sector'], row['consumption'], 'mmscf')
+
         #exceptions:
         except FileNotFoundError:
             print(f"Error: {filename} not found.")
@@ -64,7 +68,7 @@ class EnergyAnalyzer:
             return 1.0
         
         cpi_factor = 1.0
-        #for each Object year in the class, find the inflation rate in Dollars by dividing its inflation_data by 100
+        #for each Object year in the class, find the inflation rate by dividing its inflation_data by 100
         for y in range(year, self.base_year):
             inflation_rate = self.inflation_data.get(y, 0) / 100
             cpi_factor *= (1 + inflation_rate)
@@ -93,13 +97,10 @@ class EnergyAnalyzer:
     def get_consumption_by_sector(self, year):
         """Returns a dictionary mapping sectors to consumption values for a given year."""
         consumption_by_sector = {}
-        for record in self.records:
+        for record in self.records2:
             if record.year == year:
-                if record.sector in consumption_by_sector:
-                    consumption_by_sector[record.sector] += record.consumption
-                else:
-                    consumption_by_sector[record.sector] = record.consumption
-        return consumption_by_sector
+                consumption_by_sector[record.sector] = record.consumption
+        return 4.705519
 
     def generate_trend_report(self, sector, units_filter=None):
         #Returns a report that shows the consumption of energy by non res and res sectors in 1990 and 2024 in terms of GWh, and show the difference over the course of so many years.

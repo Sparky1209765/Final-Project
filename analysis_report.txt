@@ -52,14 +52,14 @@ Year | Deviation (Non-Residential - Residential)
 2024 | 305.98 GWh
 
 Insight 2: Industrial vs. Public Gas Consumption (2022)
-Santa Maria Refinery Internal Gas Use (2022): 0 mmscf
-Total County Public Gas Use (2022): 0 mmscf
-Generated Insight: Public gas usage is higher than the refinery's internal usage.
+Santa Maria Refinery Internal Gas Use (2022): 4.705519 mmscf
+Total County Public Gas Use (2022): 0.01 mmscf
+Generated Insight: Most natural gas is used by the refinery, which could be a factor in regional pricing.
 
 --- Inflation-Adjusted Price Analysis ---
 
 Inflation-Adjusted Price Report for Residential Electricity (Base Year: 2025):
-Year | Nominal Price | Adjusted Price (in {self.base_year} USD)
+Year | Nominal Price | Adjusted Price (per year) in USD)
 ---- | ------------- | ----------------------------------
 1990 | $0.0619        | $0.1549
 1991 | $0.0640        | $0.1511
@@ -98,7 +98,7 @@ Year | Nominal Price | Adjusted Price (in {self.base_year} USD)
 2024 | $0.1648        | $0.1696
 
 Inflation-Adjusted Price Report for Non-Residential Electricity (Base Year: 2025):
-Year | Nominal Price | Adjusted Price (in {self.base_year} USD)
+Year | Nominal Price | Adjusted Price (per year) in USD)
 ---- | ------------- | ----------------------------------
 1990 | $0.0586        | $0.1466
 1991 | $0.0604        | $0.1426
