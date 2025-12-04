@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 
 class EnergyRecord:
-    """Represents a single record of energy consumption."""
+    #   Represents a single record of energy consumption.
     def __init__(self, year, region, sector, consumption, units):
         self.year = int(year)
         self.region = region
@@ -14,7 +14,7 @@ class EnergyRecord:
         return f"EnergyRecord({self.year}, '{self.region}', '{self.sector}', {self.consumption}, '{self.units}')"
 
 class EnergyPrice:
-    """Represents a single record of energy price."""
+    #Represents a single record of energy price.
     def __init__(self, year, sector, fuel_type, price, units):
         self.year = int(year)
         self.sector = sector
@@ -26,7 +26,7 @@ class EnergyPrice:
         return f"EnergyPrice({self.year}, '{self.sector}', '{self.fuel_type}', {self.price}, '{self.units}')"
 
 class EnergyAnalyzer:
-    """Analyzes energy consumption and price data."""
+    #   Analyzes energy consumption and price data.
     def __init__(self, base_year=datetime.now().year):
         self.records = []
         self.records2 = []
@@ -35,7 +35,7 @@ class EnergyAnalyzer:
         self.base_year = base_year
 
     def load_data_from_csv(self, filename, data_type='record'):
-        """Loads data from a CSV file into the appropriate list."""
+        #   Loads data from a CSV file into the appropriate list.
         try:
             #opens file in read mode
             with open(filename, 'r') as f:
